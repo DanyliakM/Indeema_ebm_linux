@@ -1,0 +1,20 @@
+# build dir
+build/
+build-linux/
+build-esp/
+
+# IDE set
+.vscode/
+.idea/
+
+# compiled objects & libraries
+*.a
+*.o
+*.so
+*.bin
+*.elf
+*.exe
+coreapp
+
+# sys files
+.DS_Store
