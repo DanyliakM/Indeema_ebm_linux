@@ -9,3 +9,5 @@ add_subdirectory(common)
 add_executable(coreapp main.cpp)
 
 target_link_libraries(coreapp PRIVATE common)
+
+// Add include directories for coreapp
