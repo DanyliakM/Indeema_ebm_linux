@@ -2,7 +2,7 @@
 #include <serial/serial.h>
 #include <unistd.h>
 #include "logger.hpp"
-#include "JsonParser.hpp" // Підключаємо наш новий парсер і структуру
+#include "JsonParser.hpp"
 
 class UARTService {
 private:
@@ -40,16 +40,13 @@ public:
 };
 
 int main() {
-    // 1. Створюємо екземпляр нашої структури
     UartDevInfo devInfo;
 
-    // 2. Передаємо її в парсер для заповнення
     if (!JsonParser::parseConfig("config.json", devInfo)) {
         Logger::error("Зупинка програми через помилку конфігурації.");
         return 1;
     }
 
-    // 3. Використовуємо дані зі структури для запуску UART
     UARTService uart(devInfo.path, devInfo.baudrate);
     
     if (uart.start()) {

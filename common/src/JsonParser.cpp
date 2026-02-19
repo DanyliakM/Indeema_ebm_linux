@@ -1,63 +1,31 @@
-#include <iostream>
-#include <serial/serial.h>
-#include <unistd.h>
+#include "JsonParser.hpp"
 #include "logger.hpp"
-#include "JsonParser.hpp" // Підключаємо наш новий парсер і структуру
+#include <fstream>
+#include <jsoncpp/json/json.h>
 
-class UARTService {
-private:
-    serial::Serial _serial;
-public:
-    UARTService(const std::string& port, int baud) {
-        _serial.setPort(port);
-        _serial.setBaudrate(baud);
-        serial::Timeout to = serial::Timeout::simpleTimeout(1000);
-        _serial.setTimeout(to);
+bool JsonParser::parseConfig(const std::string& filePath, UartDevInfo& info) {
+    std::ifstream file(filePath);
+    if (!file.is_open()) {
+        Logger::error("Не вдалося відкрити файл конфігурації: " + filePath);
+        return false;
     }
 
-    bool start() {
-        try {
-            _serial.open();
-            _serial.setFlowcontrol(serial::flowcontrol_none);
-            return _serial.isOpen();
-        } catch (...) { return false; }
+    Json::Value root;
+    Json::CharReaderBuilder builder;
+    std::string errs;
+
+    if (!Json::parseFromStream(builder, file, &root, &errs)) {
+        Logger::error("Помилка парсингу JSON: " + errs);
+        return false;
     }
 
-    void testEcho(const std::string& msg) {
-        Logger::info("Відправка в порт: " + msg);
-        _serial.write(msg);
-        _serial.flush(); 
-
-        usleep(100000); 
-
-        if (_serial.available() > 0) {
-            std::string result = _serial.read(_serial.available());
-            Logger::info("УСПІХ! Отримано ехо: " + result);
-        } else {
-            Logger::error("Ехо не повернулося. Перевір перемичку RX-TX!");
-        }
-    }
-};
-
-int main() {
-    // 1. Створюємо екземпляр нашої структури
-    UartDevInfo devInfo;
-
-    // 2. Передаємо її в парсер для заповнення
-    if (!JsonParser::parseConfig("config.json", devInfo)) {
-        Logger::error("Зупинка програми через помилку конфігурації.");
-        return 1;
+    if (!root.isMember("uart") || !root["uart"].isMember("device") || !root["uart"].isMember("baudrate")) {
+        Logger::error("Невірний формат JSON: відсутні поля 'uart', 'device' або 'baudrate'");
+        return false;
     }
 
-    // 3. Використовуємо дані зі структури для запуску UART
-    UARTService uart(devInfo.path, devInfo.baudrate);
-    
-    if (uart.start()) {
-        Logger::info("Порт " + devInfo.path + " успішно відкрито.");
-        uart.testEcho("Indeema_Echo_Test");
-    } else {
-        Logger::error("Не вдалося відкрити " + devInfo.path);
-    }
-    
-    return 0;
+    info.path = root["uart"]["device"].asString();
+    info.baudrate = root["uart"]["baudrate"].asInt();
+
+    return true;
 }
