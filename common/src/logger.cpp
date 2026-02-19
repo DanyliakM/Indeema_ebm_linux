@@ -1,15 +1,10 @@
 #include "logger.hpp"
 #include <iostream>
-#include <fstream> 
 
-void Logger::log(const std::string& message) {
- 
-    std::cout << "[LOG]: " << message << std::endl;
-    
-    history.push_back(message);
+void Logger::info(const std::string& message) {
+    std::cout << "[INFO] " << message << std::endl;
+}
 
-    std::ofstream file("system.log", std::ios::app);
-    if (file.is_open()) {
-        file << message << std::endl;
-    }
+void Logger::error(const std::string& message) {
+    std::cerr << "[ERROR] " << message << std::endl;
 }

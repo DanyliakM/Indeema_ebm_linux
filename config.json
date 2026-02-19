@@ -1,0 +1,6 @@
+{
+    "uart": {
+        "device": "/dev/ttyUSB0",
+        "baudrate": 115200
+    }
+}

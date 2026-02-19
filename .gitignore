@@ -3,6 +3,11 @@ build/
 build-linux/
 build-esp/
 
+
+
+serial/
+vcpgk/
+
 # IDE set
 .vscode/
 .idea/
