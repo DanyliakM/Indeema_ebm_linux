@@ -19,7 +19,7 @@ int main() {
         Logger::info("UART Init success");
     }
 
-MqttService mqtt("tcp://broker.hivemq.com:1883", "myroslav_host_998877", "indeema/esp32/command", "indeema/esp32/status");
+    MqttService mqtt("tcp://broker.hivemq.com:1883", "myroslav_host_55443322", "indeema/esp32/command", "indeema/esp32/status");
     if (!mqtt.connect()) {
         Logger::error("MQTT Init failed");
     } else {
@@ -53,14 +53,14 @@ MqttService mqtt("tcp://broker.hivemq.com:1883", "myroslav_host_998877", "indeem
             std::cout << "R G B: ";
             std::cin >> r >> g >> b;
 
-            std::string payload = "{\"command\":\"SET_COLOR\", \"rgb\":[" + 
-                                  std::to_string(r) + "," + 
-                                  std::to_string(g) + "," + 
-                                  std::to_string(b) + "]}";
+            std::string payload = std::to_string(r) + "," + std::to_string(g) + "," + std::to_string(b);
 
             if (choice == 1) {
-                uart.send(payload);
+                std::string uart_payload = payload + "\r\n";
+                std::cout << "[UART DEBUG] Відправка: " << uart_payload;
+                uart.send(uart_payload);
             } else {
+                std::cout << "[MQTT DEBUG] Відправка: " << payload << "\n";
                 mqtt.send(payload);
             }
         }

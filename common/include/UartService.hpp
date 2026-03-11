@@ -40,7 +40,6 @@ public:
 
     void send(const std::string& msg) {
         _serial.write(msg);
-        _serial.flush();
     }
     
     std::string readData() {
