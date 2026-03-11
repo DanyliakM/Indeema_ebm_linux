@@ -23,3 +23,5 @@ coreapp
 
 # sys files
 .DS_Store
+
+rpi3/

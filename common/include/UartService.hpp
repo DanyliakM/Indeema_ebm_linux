@@ -37,6 +37,12 @@ public:
             Logger::error("Ехо не повернулося.  RX-TX!");
         }
     }
+
+    void send(const std::string& msg) {
+        _serial.write(msg);
+        _serial.flush();
+    }
+    
     std::string readData() {
         if (_serial.available() > 0) {
             return _serial.read(_serial.available());
