@@ -19,7 +19,7 @@ int main() {
         Logger::info("UART Init success");
     }
 
-    MqttService mqtt("tcp://broker.hivemq.com:1883", "host_client_wsl", "indeema/esp32/command", "indeema/esp32/status");
+MqttService mqtt("tcp://broker.hivemq.com:1883", "myroslav_host_998877", "indeema/esp32/command", "indeema/esp32/status");
     if (!mqtt.connect()) {
         Logger::error("MQTT Init failed");
     } else {

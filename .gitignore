@@ -3,6 +3,11 @@ build/
 build-linux/
 build-esp/
 
+
+
+serial/
+vcpgk/
+
 # IDE set
 .vscode/
 .idea/
@@ -18,3 +23,5 @@ coreapp
 
 # sys files
 .DS_Store
+
+rpi3/
